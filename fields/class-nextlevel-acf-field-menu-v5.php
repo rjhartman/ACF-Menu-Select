@@ -78,8 +78,6 @@ if (!class_exists('nextlevel_acf_field_menu')) :
 			// do not delete!
 			parent::__construct();
 		}
-
-
 		/*
 	*  render_field_settings()
 	*
@@ -105,12 +103,20 @@ if (!class_exists('nextlevel_acf_field_menu')) :
 		*  More than one setting can be added by copy/paste the above code.
 		*  Please note that you must also have a matching $defaults value for the field name (font_size)
 		*/
+			function nextlevel_get_nav_menus()
+			{
+				$arr = [];
+				foreach (wp_get_nav_menus() as $_ => $obj) {
+					$arr[$obj->slug] = $obj->name;
+				}
+				return $arr;
+			}
 
 			acf_render_field_setting($field, array(
 				'label'			=> __('Default Menu', 'acf-menu-select'),
 				'instructions'	=> __('Set a menu to default to, instead of just the first one registered (almost always main-menu).', 'acf-menu-select'),
 				'type'			=> 'select',
-				'choices' => get_registered_nav_menus(),
+				'choices' => nextlevel_get_nav_menus(),
 				'name'			=> 'default_menu',
 			));
 		}
@@ -140,8 +146,10 @@ if (!class_exists('nextlevel_acf_field_menu')) :
 		*  Review the data of $field.
 		*  This will show what data is available
 		*/
-
 			echo '<pre>';
+			// foreach (wp_get_nav_menus() as $index => $obj) {
+			// 	echo esc_html($obj->name . $obj->slug . ", ");
+			// }
 			echo '</pre>';
 
 
@@ -154,11 +162,11 @@ if (!class_exists('nextlevel_acf_field_menu')) :
 				<?php
 				if (empty($field['value']))
 					echo '<option disabled selected value=' . esc_attr($field['default_menu']) . ' style="display:none;"> ' . esc_html(ucwords(str_replace(["_", "-"], " ", $field['default_menu']))) . '</option>';
-				foreach (get_registered_nav_menus() as $value => $desc)
-					if ($field['value'] === $value)
-						echo '<option selected value=' . esc_attr($value) . '>' . esc_html($desc) . '</option>';
+				foreach (wp_get_nav_menus() as $_ => $obj)
+					if ($field['value'] === $obj->slug)
+						echo '<option selected value=' . esc_attr($obj->slug) . '>' . esc_html($obj->name) . '</option>';
 					else
-						echo '<option value=' . esc_attr($value) . '>' . esc_html($desc) . '</option>';
+						echo '<option value=' . esc_attr($obj->slug) . '>' . esc_html($obj->name) . '</option>';
 				?>
 			</select>
 <?php
