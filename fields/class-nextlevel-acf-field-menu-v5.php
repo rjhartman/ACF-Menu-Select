@@ -1,17 +1,18 @@
 <?php
 
 // exit if accessed directly
-if( ! defined( 'ABSPATH' ) ) exit;
+if (!defined('ABSPATH')) exit;
 
 
 // check if class already exists
-if( !class_exists('nextlevel_acf_field_menu') ) :
+if (!class_exists('nextlevel_acf_field_menu')) :
 
 
-class nextlevel_acf_field_menu extends acf_field {
-	
-	
-	/*
+	class nextlevel_acf_field_menu extends acf_field
+	{
+
+
+		/*
 	*  __construct
 	*
 	*  This function will setup the field type data
@@ -23,63 +24,63 @@ class nextlevel_acf_field_menu extends acf_field {
 	*  @param	n/a
 	*  @return	n/a
 	*/
-	
-	function __construct( $settings ) {
-		
-		/*
+
+		function __construct($settings)
+		{
+
+			/*
 		*  name (string) Single word, no spaces. Underscores allowed
 		*/
-		
-		$this->name = 'menu';
-		
-		
-		/*
+
+			$this->name = 'menu';
+
+
+			/*
 		*  label (string) Multiple words, can include spaces, visible when selecting a field type
 		*/
-		
-		$this->label = __('Menu Selector', 'acf-menu-select');
-		
-		
-		/*
+
+			$this->label = __('Menu Selector', 'acf-menu-select');
+
+
+			/*
 		*  category (string) basic | content | choice | relational | jquery | layout | CUSTOM GROUP NAME
 		*/
-		
-		$this->category = 'choice';
-		
-		
-		/*
+
+			$this->category = 'choice';
+
+
+			/*
 		*  defaults (array) Array of default settings which are merged into the field object. These are used later in settings
 		*/
-		
-		$this->defaults = array(
-			'font_size'	=> 14,
-		);
-		
-		
-		/*
+
+			$this->defaults = array(
+				'default_menu'	=> 1,
+			);
+
+
+			/*
 		*  l10n (array) Array of strings that are used in JavaScript. This allows JS strings to be translated in PHP and loaded via:
 		*  var message = acf._e('FIELD_NAME', 'error');
 		*/
-		
-		$this->l10n = array(
-			'error'	=> __('Error! Please enter a higher value', 'acf-menu-select'),
-		);
-		
-		
-		/*
+
+			$this->l10n = array(
+				'error'	=> __('Error! Please enter a higher value', 'acf-menu-select'),
+			);
+
+
+			/*
 		*  settings (array) Store plugin settings (url, path, version) as a reference for later use with assets
 		*/
-		
-		$this->settings = $settings;
-		
-		
-		// do not delete!
-    	parent::__construct();
-    	
-	}
-	
-	
-	/*
+
+			$this->settings = $settings;
+
+
+			// do not delete!
+			parent::__construct();
+		}
+
+
+		/*
 	*  render_field_settings()
 	*
 	*  Create extra settings for your field. These are visible when editing a field
@@ -91,10 +92,11 @@ class nextlevel_acf_field_menu extends acf_field {
 	*  @param	$field (array) the $field being edited
 	*  @return	n/a
 	*/
-	
-	function render_field_settings( $field ) {
-		
-		/*
+
+		function render_field_settings($field)
+		{
+
+			/*
 		*  acf_render_field_setting
 		*
 		*  This function will create a setting for your field. Simply pass the $field parameter and an array of field settings.
@@ -103,20 +105,19 @@ class nextlevel_acf_field_menu extends acf_field {
 		*  More than one setting can be added by copy/paste the above code.
 		*  Please note that you must also have a matching $defaults value for the field name (font_size)
 		*/
-		
-		acf_render_field_setting( $field, array(
-			'label'			=> __('Font Size','acf-menu-select'),
-			'instructions'	=> __('Customise the input font size','acf-menu-select'),
-			'type'			=> 'number',
-			'name'			=> 'font_size',
-			'prepend'		=> 'px',
-		));
 
-	}
-	
-	
-	
-	/*
+			acf_render_field_setting($field, array(
+				'label'			=> __('Default Menu', 'acf-menu-select'),
+				'instructions'	=> __('Set a menu to default to, instead of just the first one registered (almost always main-menu).', 'acf-menu-select'),
+				'type'			=> 'select',
+				'choices' => get_registered_nav_menus(),
+				'name'			=> 'default_menu',
+			));
+		}
+
+
+
+		/*
 	*  render_field()
 	*
 	*  Create the HTML interface for your field
@@ -130,31 +131,41 @@ class nextlevel_acf_field_menu extends acf_field {
 	*  @param	$field (array) the $field being edited
 	*  @return	n/a
 	*/
-	
-	function render_field( $field ) {
-		
-		
-		/*
+
+		function render_field($field)
+		{
+
+
+			/*
 		*  Review the data of $field.
 		*  This will show what data is available
 		*/
-		
-		echo '<pre>';
-			print_r( $field );
-		echo '</pre>';
-		
-		
-		/*
+
+			echo '<pre>';
+			echo '</pre>';
+
+
+			/*
 		*  Create a simple text input using the 'font_size' setting.
 		*/
-		
-		?>
-		<input type="text" name="<?php echo esc_attr($field['name']) ?>" value="<?php echo esc_attr($field['value']) ?>" style="font-size:<?php echo $field['font_size'] ?>px;" />
-		<?php
-	}
-	
-		
-	/*
+
+?>
+			<select name="<?php echo esc_attr($field['name']) ?>" value="<?php echo esc_attr($field['value']) ?>" style="font-size:<?php echo $field['font_size'] ?>px;">
+				<?php
+				if (empty($field['value']))
+					echo '<option disabled selected value=' . esc_attr($field['default_menu']) . ' style="display:none;"> ' . esc_html(ucwords(str_replace(["_", "-"], " ", $field['default_menu']))) . '</option>';
+				foreach (get_registered_nav_menus() as $value => $desc)
+					if ($field['value'] === $value)
+						echo '<option selected value=' . esc_attr($value) . '>' . esc_html($desc) . '</option>';
+					else
+						echo '<option value=' . esc_attr($value) . '>' . esc_html($desc) . '</option>';
+				?>
+			</select>
+<?php
+		}
+
+
+		/*
 	*  input_admin_enqueue_scripts()
 	*
 	*  This action is called in the admin_enqueue_scripts action on the edit screen where your field is created.
@@ -168,7 +179,7 @@ class nextlevel_acf_field_menu extends acf_field {
 	*  @return	n/a
 	*/
 
-	/*
+		/*
 	
 	function input_admin_enqueue_scripts() {
 		
@@ -189,9 +200,9 @@ class nextlevel_acf_field_menu extends acf_field {
 	}
 	
 	*/
-	
-	
-	/*
+
+
+		/*
 	*  input_admin_head()
 	*
 	*  This action is called in the admin_head action on the edit screen where your field is created.
@@ -205,7 +216,7 @@ class nextlevel_acf_field_menu extends acf_field {
 	*  @return	n/a
 	*/
 
-	/*
+		/*
 		
 	function input_admin_head() {
 	
@@ -214,9 +225,9 @@ class nextlevel_acf_field_menu extends acf_field {
 	}
 	
 	*/
-	
-	
-	/*
+
+
+		/*
    	*  input_form_data()
    	*
    	*  This function is called once on the 'input' page between the head and footer
@@ -232,8 +243,8 @@ class nextlevel_acf_field_menu extends acf_field {
    	*  @param	$args (array)
    	*  @return	n/a
    	*/
-   	
-   	/*
+
+		/*
    	
    	function input_form_data( $args ) {
 	   	
@@ -242,9 +253,9 @@ class nextlevel_acf_field_menu extends acf_field {
    	}
    	
    	*/
-	
-	
-	/*
+
+
+		/*
 	*  input_admin_footer()
 	*
 	*  This action is called in the admin_footer action on the edit screen where your field is created.
@@ -258,7 +269,7 @@ class nextlevel_acf_field_menu extends acf_field {
 	*  @return	n/a
 	*/
 
-	/*
+		/*
 		
 	function input_admin_footer() {
 	
@@ -267,9 +278,9 @@ class nextlevel_acf_field_menu extends acf_field {
 	}
 	
 	*/
-	
-	
-	/*
+
+
+		/*
 	*  field_group_admin_enqueue_scripts()
 	*
 	*  This action is called in the admin_enqueue_scripts action on the edit screen where your field is edited.
@@ -283,7 +294,7 @@ class nextlevel_acf_field_menu extends acf_field {
 	*  @return	n/a
 	*/
 
-	/*
+		/*
 	
 	function field_group_admin_enqueue_scripts() {
 		
@@ -291,8 +302,8 @@ class nextlevel_acf_field_menu extends acf_field {
 	
 	*/
 
-	
-	/*
+
+		/*
 	*  field_group_admin_head()
 	*
 	*  This action is called in the admin_head action on the edit screen where your field is edited.
@@ -306,7 +317,7 @@ class nextlevel_acf_field_menu extends acf_field {
 	*  @return	n/a
 	*/
 
-	/*
+		/*
 	
 	function field_group_admin_head() {
 	
@@ -315,7 +326,7 @@ class nextlevel_acf_field_menu extends acf_field {
 	*/
 
 
-	/*
+		/*
 	*  load_value()
 	*
 	*  This filter is applied to the $value after it is loaded from the db
@@ -329,8 +340,8 @@ class nextlevel_acf_field_menu extends acf_field {
 	*  @param	$field (array) the field array holding all the field options
 	*  @return	$value
 	*/
-	
-	/*
+
+		/*
 	
 	function load_value( $value, $post_id, $field ) {
 		
@@ -339,9 +350,9 @@ class nextlevel_acf_field_menu extends acf_field {
 	}
 	
 	*/
-	
-	
-	/*
+
+
+		/*
 	*  update_value()
 	*
 	*  This filter is applied to the $value before it is saved in the db
@@ -355,8 +366,8 @@ class nextlevel_acf_field_menu extends acf_field {
 	*  @param	$field (array) the field array holding all the field options
 	*  @return	$value
 	*/
-	
-	/*
+
+		/*
 	
 	function update_value( $value, $post_id, $field ) {
 		
@@ -365,9 +376,9 @@ class nextlevel_acf_field_menu extends acf_field {
 	}
 	
 	*/
-	
-	
-	/*
+
+
+		/*
 	*  format_value()
 	*
 	*  This filter is appied to the $value after it is loaded from the db and before it is returned to the template
@@ -382,8 +393,8 @@ class nextlevel_acf_field_menu extends acf_field {
 	*
 	*  @return	$value (mixed) the modified value
 	*/
-		
-	/*
+
+		/*
 	
 	function format_value( $value, $post_id, $field ) {
 		
@@ -409,9 +420,9 @@ class nextlevel_acf_field_menu extends acf_field {
 	}
 	
 	*/
-	
-	
-	/*
+
+
+		/*
 	*  validate_value()
 	*
 	*  This filter is used to perform validation on the value prior to saving.
@@ -428,8 +439,8 @@ class nextlevel_acf_field_menu extends acf_field {
 	*  @param	$input (string) the corresponding input name for $_POST value
 	*  @return	$valid
 	*/
-	
-	/*
+
+		/*
 	
 	function validate_value( $valid, $value, $field, $input ){
 		
@@ -453,9 +464,9 @@ class nextlevel_acf_field_menu extends acf_field {
 	}
 	
 	*/
-	
-	
-	/*
+
+
+		/*
 	*  delete_value()
 	*
 	*  This action is fired after a value has been deleted from the db.
@@ -469,8 +480,8 @@ class nextlevel_acf_field_menu extends acf_field {
 	*  @param	$key (string) the $meta_key which the value was deleted
 	*  @return	n/a
 	*/
-	
-	/*
+
+		/*
 	
 	function delete_value( $post_id, $key ) {
 		
@@ -479,9 +490,9 @@ class nextlevel_acf_field_menu extends acf_field {
 	}
 	
 	*/
-	
-	
-	/*
+
+
+		/*
 	*  load_field()
 	*
 	*  This filter is applied to the $field after it is loaded from the database
@@ -493,8 +504,8 @@ class nextlevel_acf_field_menu extends acf_field {
 	*  @param	$field (array) the field array holding all the field options
 	*  @return	$field
 	*/
-	
-	/*
+
+		/*
 	
 	function load_field( $field ) {
 		
@@ -503,9 +514,9 @@ class nextlevel_acf_field_menu extends acf_field {
 	}	
 	
 	*/
-	
-	
-	/*
+
+
+		/*
 	*  update_field()
 	*
 	*  This filter is applied to the $field before it is saved to the database
@@ -517,8 +528,8 @@ class nextlevel_acf_field_menu extends acf_field {
 	*  @param	$field (array) the field array holding all the field options
 	*  @return	$field
 	*/
-	
-	/*
+
+		/*
 	
 	function update_field( $field ) {
 		
@@ -527,9 +538,9 @@ class nextlevel_acf_field_menu extends acf_field {
 	}	
 	
 	*/
-	
-	
-	/*
+
+
+		/*
 	*  delete_field()
 	*
 	*  This action is fired after a field is deleted from the database
@@ -541,8 +552,8 @@ class nextlevel_acf_field_menu extends acf_field {
 	*  @param	$field (array) the field array holding all the field options
 	*  @return	n/a
 	*/
-	
-	/*
+
+		/*
 	
 	function delete_field( $field ) {
 		
@@ -551,13 +562,11 @@ class nextlevel_acf_field_menu extends acf_field {
 	}	
 	
 	*/
-	
-	
-}
+	}
 
 
-// initialize
-new nextlevel_acf_field_menu( $this->settings );
+	// initialize
+	new nextlevel_acf_field_menu($this->settings);
 
 
 // class_exists check

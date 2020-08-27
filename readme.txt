@@ -11,7 +11,7 @@ Adds a WP menu selector custom field type to ACF.
 
 == Description ==
 
-Adds a WP menu selector custom field type to ACF. Will list all available WP menus and return a WP menu object.
+Adds a WP menu selector custom field type to ACF. Will list all available WP menus and return the name of the WP menu object.
 
 = Compatibility =
 
