@@ -1,6 +1,6 @@
 # ACF Menu Field
 
-Adds a WP menu selector custom field type to ACF. Will list all available WP menus and return the selected menu's slug.
+Adds a WP menu selector custom field type to [ACF](https://www.advancedcustomfields.com/). Will list all available WP menus and return the selected menu's slug.
 
 ## Installation
 
@@ -19,6 +19,4 @@ Wordpress
 
 Timber (timber.php, page.php, etc..)
 
-```php
-  $context['custom_menu'] = new Timber\Menu(get_field('custom_menu'));
-```
+where
