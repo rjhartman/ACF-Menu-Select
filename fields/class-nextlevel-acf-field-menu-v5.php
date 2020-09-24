@@ -103,13 +103,15 @@ if (!class_exists('nextlevel_acf_field_menu')) :
 		*  More than one setting can be added by copy/paste the above code.
 		*  Please note that you must also have a matching $defaults value for the field name (font_size)
 		*/
-			function nextlevel_get_nav_menus()
-			{
-				$arr = [];
-				foreach (wp_get_nav_menus() as $_ => $obj) {
-					$arr[$obj->slug] = $obj->name;
+			if (!function_exists("nextlevel_get_nav_menus")) {
+				function nextlevel_get_nav_menus()
+				{
+					$arr = [];
+					foreach (wp_get_nav_menus() as $_ => $obj) {
+						$arr[$obj->slug] = $obj->name;
+					}
+					return $arr;
 				}
-				return $arr;
 			}
 
 			acf_render_field_setting($field, array(
