@@ -28,6 +28,9 @@ This ACF field type is compatible with:
 
 == Changelog ==
 
+= 2.0.0 =
+* Use caching to fix default values changing.
+
 = 1.1.0 =
 * Fixed default value bug where the default value could not be changed.
 

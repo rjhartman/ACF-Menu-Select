@@ -4,7 +4,7 @@
 Plugin Name: Advanced Custom Fields: Menu Selector
 Plugin URI: https://github.com/RHartman99/ACF-Menu-Select
 Description: Adds a WP menu selector field type to ACF.
-Version: 1.0.1
+Version: 2.0.0
 Author: Ryan Hartman
 Author URI: https://github.com/RHartman99
 License: GPLv2 or later
@@ -44,7 +44,7 @@ if (!class_exists('nextlevel_acf_plugin_menu')) :
 			// settings
 			// - these will be passed into the field class.
 			$this->settings = array(
-				'version'	=> '1.0.0',
+				'version'	=> '4',
 				'url'		=> plugin_dir_url(__FILE__),
 				'path'		=> plugin_dir_path(__FILE__)
 			);
