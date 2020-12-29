@@ -55,6 +55,7 @@ if (!class_exists('nextlevel_acf_field_menu')) :
 
 			$this->defaults = array(
 				'default_menu'	=> 1,
+				'previous_default' => 1
 			);
 
 
@@ -153,9 +154,9 @@ if (!class_exists('nextlevel_acf_field_menu')) :
 			// 	echo esc_html($obj->name . $obj->slug . ", ");
 			// }
 			echo '</pre>';
-
+			$value = (empty($field['value']) || $field['value'] === $field['previous_default']) ? $field['previous_default'] : $field['value'];
 ?>
-			<select name="<?php echo esc_attr($field['name']) ?>" value="<?php echo esc_attr($field['value']) ?>">
+			<select name="<?= esc_attr($field['name']) ?>" value="<?= esc_attr($value) ?>">
 				<?php
 				if (empty($field['value']) || $field['value'] === $field['previous_default']) {
 					echo '<option disabled selected value=' . esc_attr($field['default_menu']) . ' style="display:none;"> ' . esc_html(ucwords(str_replace(["_", "-"], " ", $field['default_menu']))) . '</option>';
@@ -167,7 +168,9 @@ if (!class_exists('nextlevel_acf_field_menu')) :
 						echo '<option selected value=' . esc_attr($obj->slug) . '>' . esc_html($obj->name) . '</option>';
 					else
 						echo '<option value=' . esc_attr($obj->slug) . '>' . esc_html($obj->name) . '</option>';
+				echo '<option value=' . esc_attr($field['default_menu']) . '>Default Menu (' . esc_html($field['default_menu']) . ')</option>';
 				?>
+				
 			</select>
 <?php
 		}
