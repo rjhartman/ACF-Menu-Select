@@ -1,6 +1,6 @@
 === Advanced Custom Fields: Menu Field ===
 Contributors: Ryan Hartman
-Tags: PLUGIN_TAGS
+Tags: acf, custom fields,
 Requires at least: 3.6.0
 Tested up to: 4.9.0
 Stable tag: trunk
@@ -27,6 +27,12 @@ This ACF field type is compatible with:
 4. When using in the front end, be sure to get the menu object, the field will simply return the menu identifier string.
 
 == Changelog ==
+
+= 1.1.0 =
+* Fixed default value bug where the default value could not be changed.
+
+= 1.0.1 =
+* Added default value functionality
 
 = 1.0.0 =
 * Initial Release.

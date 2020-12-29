@@ -157,8 +157,11 @@ if (!class_exists('nextlevel_acf_field_menu')) :
 ?>
 			<select name="<?php echo esc_attr($field['name']) ?>" value="<?php echo esc_attr($field['value']) ?>">
 				<?php
-				if (empty($field['value']))
+				if (empty($field['value']) || $field['value'] === $field['previous_default']) {
 					echo '<option disabled selected value=' . esc_attr($field['default_menu']) . ' style="display:none;"> ' . esc_html(ucwords(str_replace(["_", "-"], " ", $field['default_menu']))) . '</option>';
+					$field['previous_default'] = $field['default_menu'];
+				}
+
 				foreach (wp_get_nav_menus() as $_ => $obj)
 					if ($field['value'] === $obj->slug)
 						echo '<option selected value=' . esc_attr($obj->slug) . '>' . esc_html($obj->name) . '</option>';
