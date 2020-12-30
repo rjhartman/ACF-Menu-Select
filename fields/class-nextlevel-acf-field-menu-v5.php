@@ -171,7 +171,7 @@ if (!class_exists('nextlevel_acf_field_menu')) :
 			// print_r($field["id"]);
 			// print_r($this->cache);
 			echo '</pre>';
-			$value = $field['value'];
+			$value = empty($field['value']) ? $this->default_sentinel : $field['value'];
 ?>
 			<select name="<?= esc_attr($field['name']) ?>" value="<?= esc_attr($value) ?>">
 				<?php
